@@ -87,6 +87,7 @@ def st_combobox(
     clear_on_submit: bool = False,
     key: str = "combobox",
     rerun_on_update: bool = True,
+    default_options = [],
     **kwargs,
 ) -> any:
     """
@@ -108,6 +109,8 @@ def st_combobox(
             Streamlit session key. Defaults to "combobox".
         rerun_on_update (bool, optional):
             Rerun the search function on each keystroke. Defaults to True.
+        default_options (List[any], optional):
+            List of options to be displayed by default. Defaults to None.
 
     Returns:
         any: based on user selection
@@ -123,7 +126,7 @@ def st_combobox(
             # updated after each search keystroke
             "search": "",
             # updated after each search_function run
-            "options": [],
+            "options": default_options,
         }
 
     # everything here is passed to react as this.props.args
