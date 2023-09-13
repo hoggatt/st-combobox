@@ -52,7 +52,7 @@ def search(searchterm: str) -> List[Tuple[str, any]]:
 To customize the combobox you can pass the following arguments:  
 
 ```python
-st_combobox(
+selected_value = st_combobox(
     search_function: Callable[[str], List[any]],
     placeholder: str = "Search ...",
     label: str = None,
@@ -78,49 +78,49 @@ Placeholder text when the combobox is blank.
 ```python
 placeholder: str = "Search ..."
 ```
-
+<br/>
 
 Label shown above the component. If `None`, no label is shown.
 ```python
 label: str = None
 ```
-
+<br/>
 
 Default return value in case nothing was submitted or the combobox cleared.
 ```python
 default: any = None
 ```
-
+<br/>
 
 Automatically clear the input after selection.
 ```python
 clear_on_submit: bool = False
 ```
-
+<br/>
 
 Streamlit key for unique component identification.
 ```python
 key: str = "combobox"
 ```
-
+<br/>
 
 If true, will call `st.experimental_rerun()` on each search keystroke.
 ```python
 rerun_on_update: bool = False
 ```
-
+<br/>
 
 If true (and `rerun_on_update` is false), will call `st.stop()` on each search keystroke.
 ```python
 stop_on_update: bool = False
 ```
-
+<br/>
 
 If not None, will set the default search value when the box is initialized or reset. 
 ```python
 blank_search_value: str = None
 ```
-
+<br/>
 
 If true, will only return a non None value when the user selects an option. Otherwise, will keep returning the last value.
 ```python
