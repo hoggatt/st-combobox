@@ -72,7 +72,7 @@ Function that will be called on user input
 ```python
 search_function: Callable[[str], List[any]]
 ```
-
+<br/>
 
 Placeholder text when the combobox is blank.
 ```python
