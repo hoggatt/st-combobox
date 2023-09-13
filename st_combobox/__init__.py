@@ -87,7 +87,8 @@ def st_combobox(
     clear_on_submit: bool = False,
     key: str = "combobox",
     rerun_on_update: bool = True,
-    initial_search_value: str = None,
+    blank_search_value: str = None,
+    return_only_on_submit: bool = False,
     **kwargs,
 ) -> any:
     """
@@ -109,8 +110,10 @@ def st_combobox(
             Streamlit session key. Defaults to "combobox".
         rerun_on_update (bool, optional):
             Rerun the search function on each keystroke. Defaults to True.
-        initial_search_value (str, optional):
-            Initial search value. If none, will not do an initial search. Defaults to None.
+        blank_search_value (str, optional):
+            Blank search value. If none, will not do an search if the box is blank/reset. Defaults to None.
+        return_only_on_submit (bool, optional):
+            Only return a value if the user has submitted a value. Defaults to False.
 
     Returns:
         any: based on user selection
@@ -130,9 +133,9 @@ def st_combobox(
         }
 
         # load stuff the first run if called for
-        if initial_search_value is not None:
-            print("initial population")
-            _process_search(search_function, key, initial_search_value, rerun_on_update)
+        if blank_search_value is not None:
+            print("-initial population of box")
+            _process_search(search_function, key, blank_search_value, rerun_on_update)
 
     # everything here is passed to react as this.props.args
     react_state = _get_react_component(
@@ -146,14 +149,15 @@ def st_combobox(
     )
 
     if react_state is None:
+        print("-react_state is None! Returning",st.session_state[key]["result"])
         return st.session_state[key]["result"]
 
     interaction, value = react_state["interaction"], react_state["value"]
 
-    print("\ninteraction", interaction, "value", value)
+    print("\n-interaction", interaction, "value", value)
 
     if interaction == "search":
-        print("Search happening")
+        print("-Search happening")
         # triggers rerun, no ops afterwards executed
         _process_search(search_function, key, value, rerun_on_update)
 
@@ -163,14 +167,31 @@ def st_combobox(
             if "options_real_type" in st.session_state[key]
             else value
         )
-        print("submit happening!!!!", st.session_state[key]["result"])
+        print("-submit happening!!!!", st.session_state[key]["result"])
         return st.session_state[key]["result"]
 
     if interaction == "reset":
-        print("reset triggered:",default)
-        st.session_state[key]["result"] = default
+        print("-reset triggered:",default)
+        st.session_state[key] = {
+            # updated after each selection / reset
+            "result": default,
+            # updated after each search keystroke
+            "search": "",
+            # updated after each search_function run
+            "options": [],
+        }
+
+        if blank_search_value is not None:
+            print("-reset population")
+            _process_search(search_function, key, blank_search_value, rerun_on_update)
+
         return default
 
-    # no new react interaction happened
-    print("no interaction",st.session_state[key]["result"])
-    return st.session_state[key]["result"]
+    # only return something real if there was a submit. If anything else happens, return nothing
+    if return_only_on_submit:
+        print("-no interaction",None)
+        return None
+    else:
+        print("-no interaction",st.session_state[key]["result"])
+        return st.session_state[key]["result"]
+
