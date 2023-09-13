@@ -91,3 +91,11 @@ Streamlit key for unique component identification.
 ### Example
 
 An example Streamlit app can be found [here](./example.py)
+
+## Build
+
+If any changes were made to the frontend, go to `st_combobox/frontend` and run `npm run build` (`npm install` if you don't have the packages on your machine). Then push the changes made to the `frontend/build` folder to the repo. 
+
+You may need to follow [this](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported) help if you run into issues while building.
+
+Now all you have to do is make a release and the github action will push to PyPi (make sure `setup.py` has a new verison)
