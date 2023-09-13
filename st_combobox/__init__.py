@@ -1,5 +1,5 @@
 """
-module for streamlit searchbox component
+module for streamlit combobox component
 """
 import functools
 import logging
@@ -13,7 +13,7 @@ import streamlit.components.v1 as components
 parent_dir = os.path.dirname(os.path.abspath(__file__))
 build_dir = os.path.join(parent_dir, "frontend/build")
 _get_react_component = components.declare_component(
-    "searchbox",
+    "combobox",
     path=build_dir,
 )
 
@@ -79,33 +79,33 @@ def _process_search(
 
 
 @wrap_inactive_session
-def st_searchbox(
+def st_combobox(
     search_function: Callable[[str], List[any]],
     placeholder: str = "Search ...",
     label: str = None,
     default: any = None,
     clear_on_submit: bool = False,
-    key: str = "searchbox",
+    key: str = "combobox",
     rerun_on_update: bool = False,
     **kwargs,
 ) -> any:
     """
-    Create a new searchbox instance, that provides suggestions based on the user input
+    Create a new combobox instance, that provides suggestions based on the user input
     and returns a selected option or empty string if nothing was selected
 
     Args:
         search_function (Callable[[str], List[any]]):
             Function that is called to fetch new suggestions after user input.
         placeholder (str, optional):
-            Label shown in the searchbox. Defaults to "Search ...".
+            Label shown in the combobox. Defaults to "Search ...".
         label (str, optional):
-            Label shown above the searchbox. Defaults to None.
+            Label shown above the combobox. Defaults to None.
         default (any, optional):
             Return value if nothing is selected so far. Defaults to None.
         clear_on_submit (bool, optional):
             Remove suggestions on select. Defaults to False.
         key (str, optional):
-            Streamlit session key. Defaults to "searchbox".
+            Streamlit session key. Defaults to "combobox".
         rerun_on_update (bool, optional):
             Rerun the search function on each keystroke. Defaults to True.
 
