@@ -143,7 +143,6 @@ def st_combobox(
 
         # load stuff the first run if called for
         if blank_search_value is not None:
-            print("-initial population of box")
             _process_search(search_function, key, blank_search_value, rerun_on_update, stop_on_update)
 
     # everything here is passed to react as this.props.args
@@ -158,7 +157,6 @@ def st_combobox(
     )
 
     if react_state is None:
-        print("-react_state is None! Returning",st.session_state[key]["result"])
         return st.session_state[key]["result"]
 
     interaction, value = react_state["interaction"], react_state["value"]

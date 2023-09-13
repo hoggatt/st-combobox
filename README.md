@@ -7,9 +7,9 @@
 
 ---
 
-A streamlit custom component providing a searchbox with autocomplete.
+A streamlit custom component providing a combobox with autocomplete.
 
-![Example](./assets/example.gif)
+![Example](https://raw.githubusercontent.com/hoggatt/st-combobox/main/assets/example.gif)
 
 
 ## Installation
@@ -20,7 +20,7 @@ pip install st-combobox
 
 ## Overview
 
-Create a searchbox component and pass a `search_function` that accepts a `str` searchterm. The searchbox is triggered on user input, calls the search function for new options and redraws the page via `st.experimental_rerun()`.
+Create a searchbox component and pass a `search_function` that accepts a `str` searchterm. The searchbox is triggered on user input and calls the search function for new options.`.
 
 You can either pass a list of arguments, e.g.
 
@@ -49,44 +49,68 @@ def search(searchterm: str) -> List[Tuple[str, any]]:
 
 ## Usage
 
-To customize the searchbox you can pass the following arguments:
+To customize the searchbox you can pass the following arguments:  
 
+
+Function that will be called on user input
 ```python
 search_function: Callable[[str], List[any]]
 ```
 
-Function that will be called on user input
 
+Placeholder text when the combobox is blank.
 ```python
 placeholder: str = "Search ..."
 ```
 
-Placeholder for empty searches shown within the component.
 
+Label shown above the component. If `None`, no label is shown.
 ```python
 label: str = None
 ```
 
-Label shown above the component.
 
+Default return value in case nothing was submitted or the searchbox cleared.
 ```python
 default: any = None
 ```
 
-Default return value in case nothing was submitted or the searchbox cleared.
 
+Automatically clear the input after selection.
 ```python
 clear_on_submit: bool = False
 ```
 
-Automatically clear the input after selection.
-
-
-```python
-key: str = "searchbox"
-```
 
 Streamlit key for unique component identification.
+```python
+key: str = "combobox"
+```
+
+
+If true, will call `st.experimental_rerun()` on each search keystroke.
+```python
+rerun_on_update: bool = False
+```
+
+
+If true (and `rerun_on_update` is false), will call `st.stop()` on each search keystroke.
+```python
+stop_on_update: bool = False
+```
+
+
+If not None, will set the default search value when the box is initialized or reset. 
+```python
+blank_search_value: str = None
+```
+
+
+If true, will only return a non None value when the user selects an option. Otherwise, will keep returning the last value.
+```python
+return_only_on_submit: bool = False
+```
+
 
 ### Example
 
@@ -98,4 +122,4 @@ If any changes were made to the frontend, go to `st_combobox/frontend` and run `
 
 You may need to follow [this](https://stackoverflow.com/questions/69692842/error-message-error0308010cdigital-envelope-routinesunsupported) help if you run into issues while building.
 
-Now all you have to do is make a release and the github action will push to PyPi (make sure `setup.py` has a new verison)
+Now all you have to do is make a release and the github action will push to PyPi (make sure `setup.py` has a new verison).
