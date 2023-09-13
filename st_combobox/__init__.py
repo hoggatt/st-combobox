@@ -87,6 +87,7 @@ def _process_search(
 @wrap_inactive_session
 def st_combobox(
     search_function: Callable[[str], List[any]],
+    reset_function: Callable[[], None] = None,
     placeholder: str = "Search ...",
     label: str = None,
     default: any = None,
@@ -105,6 +106,8 @@ def st_combobox(
     Args:
         search_function (Callable[[str], List[any]]):
             Function that is called to fetch new suggestions after user input.
+        reset_function (Callable[[], None], optional):
+            Function that is called after the user has reset the combobox. Defaults to None.
         placeholder (str, optional):
             Label shown in the combobox. Defaults to "Search ...".
         label (str, optional):
@@ -143,7 +146,9 @@ def st_combobox(
 
         # load stuff the first run if called for
         if blank_search_value is not None:
-            _process_search(search_function, key, blank_search_value, rerun_on_update, stop_on_update)
+            _process_search(
+                search_function, key, blank_search_value, rerun_on_update, stop_on_update
+            )
 
     # everything here is passed to react as this.props.args
     react_state = _get_react_component(
@@ -185,7 +190,11 @@ def st_combobox(
 
         if blank_search_value is not None:
             # reset default search if specified (must reload for this to actually show, hitting backspace again works)
-            _process_search(search_function, key, blank_search_value, rerun_on_update, stop_on_update)
+            _process_search(
+                search_function, key, blank_search_value, rerun_on_update, stop_on_update
+            )
+        if reset_function is not None:
+            reset_function()
 
         return default
 
@@ -194,4 +203,3 @@ def st_combobox(
         return None
     else:
         return st.session_state[key]["result"]
-

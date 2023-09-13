@@ -54,6 +54,7 @@ To customize the combobox you can pass the following arguments:
 ```python
 selected_value = st_combobox(
     search_function: Callable[[str], List[any]],
+    reset_function: Callable[[], None] = None,
     placeholder: str = "Search ...",
     label: str = None,
     default: any = None,
@@ -71,6 +72,12 @@ selected_value = st_combobox(
 Function that will be called on user input
 ```python
 search_function: Callable[[str], List[any]]
+```
+<br/>
+
+Function that will be called when the combobox is reset.
+```python
+reset_function: Callable[[], None] = None
 ```
 <br/>
 
