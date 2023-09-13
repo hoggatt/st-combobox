@@ -20,23 +20,23 @@ pip install st-combobox
 
 ## Overview
 
-Create a searchbox component and pass a `search_function` that accepts a `str` searchterm. The searchbox is triggered on user input and calls the search function for new options.`.
+Create a combobox component and pass a `search_function` that accepts a `str` searchterm. The combobox is triggered on user input and calls the search function for new options.`.
 
 You can either pass a list of arguments, e.g.
 
 ```python
 import wikipedia
-from streamlit_searchbox import st_searchbox
+from st_combobox import st_combobox
 
 # function with list of labels
 def search_wikipedia(searchterm: str) -> List[any]:
     return wikipedia.search(searchterm) if searchterm else []
 
 
-# pass search function to searchbox
-selected_value = st_searchbox(
+# pass search function to combobox
+selected_value = st_combobox(
     search_wikipedia,
-    key="wiki_searchbox",
+    key="wiki_combobox",
 )
 ```
 
@@ -49,8 +49,24 @@ def search(searchterm: str) -> List[Tuple[str, any]]:
 
 ## Usage
 
-To customize the searchbox you can pass the following arguments:  
+To customize the combobox you can pass the following arguments:  
 
+```python
+st_combobox(
+    search_function: Callable[[str], List[any]],
+    placeholder: str = "Search ...",
+    label: str = None,
+    default: any = None,
+    clear_on_submit: bool = False,
+    key: str = "combobox",
+    rerun_on_update: bool = False,
+    stop_on_update: bool = False,
+    blank_search_value: str = None,
+    return_only_on_submit: bool = False,
+)
+```
+
+### Explanations of the arguments
 
 Function that will be called on user input
 ```python
@@ -70,7 +86,7 @@ label: str = None
 ```
 
 
-Default return value in case nothing was submitted or the searchbox cleared.
+Default return value in case nothing was submitted or the combobox cleared.
 ```python
 default: any = None
 ```
