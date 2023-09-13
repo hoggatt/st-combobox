@@ -131,6 +131,7 @@ def st_combobox(
 
         # load stuff the first run if called for
         if initial_search_value is not None:
+            print("initial population")
             _process_search(search_function, key, initial_search_value, rerun_on_update)
 
     # everything here is passed to react as this.props.args
@@ -149,7 +150,10 @@ def st_combobox(
 
     interaction, value = react_state["interaction"], react_state["value"]
 
+    print("\ninteraction", interaction, "value", value)
+
     if interaction == "search":
+        print("Search happening")
         # triggers rerun, no ops afterwards executed
         _process_search(search_function, key, value, rerun_on_update)
 
@@ -159,11 +163,14 @@ def st_combobox(
             if "options_real_type" in st.session_state[key]
             else value
         )
+        print("submit happening!!!!", st.session_state[key]["result"])
         return st.session_state[key]["result"]
 
     if interaction == "reset":
+        print("reset triggered:",default)
         st.session_state[key]["result"] = default
         return default
 
     # no new react interaction happened
+    print("no interaction",st.session_state[key]["result"])
     return st.session_state[key]["result"]
