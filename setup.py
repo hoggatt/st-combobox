@@ -1,18 +1,24 @@
 import setuptools
 
+with open('README.md') as f:
+    long_description = f.read()
+
 setuptools.setup(
     name="st-combobox",
-    version="0.1.0",
+    version="0.1.1",
     author="hoggatt",
-    description="Autocomplete Combobox",
-    long_description="Streamlit combobox that dynamically updates "
-    + "and provides a list of suggestions based on a provided function",
-    long_description_content_type="text/plain",
+    description="Streamlit AutoComplete ComboBox",
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     url="https://github.com/hoggatt/st-combobox",
     packages=setuptools.find_packages(),
     include_package_data=True,
+    license='MIT',
     classifiers=[],
-    python_requires=">=3.7, !=3.9.7",
+    project_urls={
+        'Source Code': 'https://github.com/hoggatt/st-combobox',
+    },
+    python_requires=">=3.7",
     install_requires=[
         "streamlit >= 1.0",
     ],
