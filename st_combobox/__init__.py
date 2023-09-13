@@ -44,6 +44,7 @@ def _process_search(
     search_function: Callable[[str], List[any]],
     key: str,
     searchterm: str,
+    rerun_on_update: str
 ) -> bool:
     # nothing changed, avoid new search
     if searchterm == st.session_state[key]["search"]:
@@ -73,7 +74,8 @@ def _process_search(
     # used for proper return types
     st.session_state[key]["options_real_type"] = [_get_value(v) for v in search_results]
 
-    st.experimental_rerun()
+    if rerun_on_update:
+        st.experimental_rerun()
 
 
 @wrap_inactive_session
@@ -84,6 +86,7 @@ def st_searchbox(
     default: any = None,
     clear_on_submit: bool = False,
     key: str = "searchbox",
+    rerun_on_update: bool = False,
     **kwargs,
 ) -> any:
     """
@@ -103,6 +106,8 @@ def st_searchbox(
             Remove suggestions on select. Defaults to False.
         key (str, optional):
             Streamlit session key. Defaults to "searchbox".
+        rerun_on_update (bool, optional):
+            Rerun the search function on each keystroke. Defaults to True.
 
     Returns:
         any: based on user selection
@@ -139,7 +144,7 @@ def st_searchbox(
 
     if interaction == "search":
         # triggers rerun, no ops afterwards executed
-        _process_search(search_function, key, value)
+        _process_search(search_function, key, value, rerun_on_update)
 
     if interaction == "submit":
         st.session_state[key]["result"] = (

@@ -1,1 +1,1 @@
-recursive-include streamlit_searchbox/frontend/build *
+recursive-include st_combobox/frontend/build *

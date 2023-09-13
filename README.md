@@ -1,4 +1,4 @@
-# streamlit-searchbox
+# st-combobox
 
 - [Installation](#installation)
 - [Overview](#overview)
@@ -15,7 +15,7 @@ A streamlit custom component providing a searchbox with autocomplete.
 ## Installation
 
 ```python
-pip install streamlit-searchbox
+pip install st-combobox
 ```
 
 ## Overview
