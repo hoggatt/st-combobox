@@ -112,9 +112,9 @@ return_only_on_submit: bool = False
 ```
 
 
-### Example
+## Example
 
-An example Streamlit app can be found [here](./example.py)
+An example Streamlit app can be found [here](./example.py).
 
 ## Build
 
