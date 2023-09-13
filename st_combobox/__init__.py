@@ -185,6 +185,17 @@ def st_combobox(
             print("-reset population")
             _process_search(search_function, key, blank_search_value, rerun_on_update)
 
+            # redraw component with new options
+            react_state = _get_react_component(
+                options=st.session_state[key]["options"],
+                clear_on_submit=clear_on_submit,
+                placeholder=placeholder,
+                label=label,
+                # react return state within streamlit session_state
+                key=key_react,
+                **kwargs,
+            )
+
         return default
 
     # only return something real if there was a submit. If anything else happens, return nothing
