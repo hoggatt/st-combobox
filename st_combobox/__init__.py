@@ -86,7 +86,7 @@ def st_combobox(
     default: any = None,
     clear_on_submit: bool = False,
     key: str = "combobox",
-    rerun_on_update: bool = False,
+    rerun_on_update: bool = True,
     **kwargs,
 ) -> any:
     """
