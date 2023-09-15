@@ -46,6 +46,7 @@ def _process_search(
     searchterm: str,
     rerun_on_update: str,
     stop_on_update: bool,
+    blank_search_value: str = None,
 ) -> bool:
     # nothing changed, avoid new search
     if searchterm == st.session_state[key]["search"]:
@@ -64,6 +65,7 @@ def _process_search(
         return value[1] if isinstance(value, tuple) else value
 
     # used for react component
+    prev_size = len(st.session_state[key]["options"])
     st.session_state[key]["options"] = [
         {
             "label": _get_label(v),
@@ -75,8 +77,12 @@ def _process_search(
     # used for proper return types
     st.session_state[key]["options_real_type"] = [_get_value(v) for v in search_results]
 
-    # if called for, rerun on update
-    if rerun_on_update:
+    # rerun if specified unless we are making the default search and our results are the same size as the previous search (prevent infinite loop)
+    if rerun_on_update and not (
+        blank_search_value is not None
+        and searchterm == blank_search_value
+        and prev_size == len(st.session_state[key]["options"])
+    ):
         st.experimental_rerun()
 
     # if not reruning, can also call for stopping on update
@@ -147,7 +153,12 @@ def st_combobox(
         # load stuff the first run if called for
         if blank_search_value is not None:
             _process_search(
-                search_function, key, blank_search_value, rerun_on_update, stop_on_update
+                search_function,
+                key,
+                blank_search_value,
+                rerun_on_update,
+                stop_on_update,
+                blank_search_value,
             )
 
     # everything here is passed to react as this.props.args
@@ -191,7 +202,12 @@ def st_combobox(
         if blank_search_value is not None:
             # reset default search if specified (must reload for this to actually show, hitting backspace again works)
             _process_search(
-                search_function, key, blank_search_value, rerun_on_update, stop_on_update
+                search_function,
+                key,
+                blank_search_value,
+                rerun_on_update,
+                stop_on_update,
+                blank_search_value,
             )
         if reset_function is not None:
             reset_function()
