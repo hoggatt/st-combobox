@@ -78,22 +78,10 @@ def _process_search(
     st.session_state[key]["options_real_type"] = [_get_value(v) for v in search_results]
 
     # rerun if specified unless we are making the default search and our results are the same size as the previous search (prevent infinite loop)
-    print(
-        "-in loop now should we restart?: ",
-        blank_search_value is not None,
-        searchterm == blank_search_value,
-        prev_size == len(st.session_state[key]["options"]),
-    )
-    print("-rerun_on_update: ", rerun_on_update)
-    print("-stop_on_update: ", stop_on_update)
-    print("-blank_search_value: ", blank_search_value)
-    print("-searchterm: ", searchterm)
-    print("-prev_size: ", prev_size)
-    print("-len(st.session_state[key][options]): ", len(st.session_state[key]["options"]))
     if rerun_on_update and not (
         blank_search_value is not None
         and searchterm == blank_search_value
-        and prev_size == len(st.session_state[key]["options"])
+        and prev_size == 0
     ):
         st.experimental_rerun()
 
