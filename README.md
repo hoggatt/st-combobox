@@ -111,7 +111,7 @@ key: str = "combobox"
 ```
 <br/>
 
-If true, will call `st.experimental_rerun()` on each search keystroke.
+If true, will call `st.experimental_rerun()` on each search keystroke. If this is set to its default (False), the auto-complete results will always be one keystroke behind. 
 ```python
 rerun_on_update: bool = False
 ```
