@@ -4,7 +4,7 @@ module for streamlit combobox component
 import functools
 import logging
 import os
-from typing import Callable, List
+from typing import Any, Callable, List
 
 import streamlit as st
 import streamlit.components.v1 as components
@@ -39,6 +39,26 @@ def wrap_inactive_session(func):
 
     return inner_function
 
+def _list_to_options_py(options: list[Any] | list[tuple[str, Any]]) -> list[Any]:
+    """
+    unpack search options for proper python return types
+    """
+    return [v[1] if isinstance(v, tuple) else v for v in options]
+
+
+def _list_to_options_js(
+    options: list[Any] | list[tuple[str, Any]]
+) -> list[dict[str, Any]]:
+    """
+    unpack search options for use in react component
+    """
+    return [
+        {
+            "label": str(v[0]) if isinstance(v, tuple) else str(v),
+            "value": i,
+        }
+        for i, v in enumerate(options)
+    ]
 
 def _process_search(
     search_function: Callable[[str], List[any]],
@@ -58,24 +78,9 @@ def _process_search(
     if search_results is None:
         search_results = []
 
-    def _get_label(label: any) -> str:
-        return str(label[0]) if isinstance(label, tuple) else str(label)
-
-    def _get_value(value: any) -> any:
-        return value[1] if isinstance(value, tuple) else value
-
-    # used for react component
-    prev_size = len(st.session_state[key]["options"])
-    st.session_state[key]["options"] = [
-        {
-            "label": _get_label(v),
-            "value": i,
-        }
-        for i, v in enumerate(search_results)
-    ]
-
-    # used for proper return types
-    st.session_state[key]["options_real_type"] = [_get_value(v) for v in search_results]
+    prev_size = len(st.session_state[key]["options_js"])
+    st.session_state[key]["options_js"] = _list_to_options_js(search_results)
+    st.session_state[key]["options_py"] = _list_to_options_py(search_results)
 
     # rerun if specified unless we are making the default search and our results are the same size as the previous search (prevent infinite loop)
     if rerun_on_update and not (
@@ -92,11 +97,12 @@ def _process_search(
 
 @wrap_inactive_session
 def st_combobox(
-    search_function: Callable[[str], List[any]],
+    search_function: Callable[[str], List[Any]],
     reset_function: Callable[[], None] = None,
     placeholder: str = "Search ...",
     label: str = None,
-    default: any = None,
+    default: Any = None,
+    default_options: List[Any] | None = None,
     clear_on_submit: bool = False,
     key: str = "combobox",
     rerun_on_update: bool = False,
@@ -104,7 +110,7 @@ def st_combobox(
     blank_search_value: str = None,
     return_only_on_submit: bool = False,
     **kwargs,
-) -> any:
+) -> Any:
     """
     Create a new combobox instance, that provides suggestions based on the user input
     and returns a selected option or empty string if nothing was selected
@@ -120,6 +126,8 @@ def st_combobox(
             Label shown above the combobox. Defaults to None.
         default (any, optional):
             Return value if nothing is selected so far. Defaults to None.
+        default_options (List[any], optional):
+            Default options to show in the combobox. Defaults to None.
         clear_on_submit (bool, optional):
             Remove suggestions on select. Defaults to False.
         key (str, optional):
@@ -147,10 +155,15 @@ def st_combobox(
             # updated after each search keystroke
             "search": "",
             # updated after each search_function run
-            "options": [],
+            "options_js": [],
         }
 
-        # load stuff the first run if called for
+        # if default options are given, set them
+        if default_options:
+            st.session_state[key]["options_js"] = _list_to_options_js(default_options)
+            st.session_state[key]["options_py"] = _list_to_options_py(default_options)
+
+        # if there is a blank search value specified, run that search
         if blank_search_value is not None:
             _process_search(
                 search_function,
@@ -163,7 +176,7 @@ def st_combobox(
 
     # everything here is passed to react as this.props.args
     react_state = _get_react_component(
-        options=st.session_state[key]["options"],
+        options=st.session_state[key]["options_js"],
         clear_on_submit=clear_on_submit,
         placeholder=placeholder,
         label=label,
@@ -183,8 +196,8 @@ def st_combobox(
 
     if interaction == "submit":
         st.session_state[key]["result"] = (
-            st.session_state[key]["options_real_type"][value]
-            if "options_real_type" in st.session_state[key]
+            st.session_state[key]["options_py"][value]
+            if "options_py" in st.session_state[key]
             else value
         )
         return st.session_state[key]["result"]
@@ -196,8 +209,13 @@ def st_combobox(
             # updated after each search keystroke
             "search": "",
             # updated after each search_function run
-            "options": [],
+            "options_js": [],
         }
+
+        # if default options are given, set them
+        if default_options:
+            st.session_state[key]["options_js"] = _list_to_options_js(default_options)
+            st.session_state[key]["options_py"] = _list_to_options_py(default_options)
 
         if blank_search_value is not None:
             # reset default search if specified (must reload for this to actually show, hitting backspace again works)
