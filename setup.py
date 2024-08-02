@@ -5,7 +5,7 @@ with open('README.md') as f:
 
 setuptools.setup(
     name="st-combobox",
-    version="1.1.1",
+    version="1.2.0",
     author="hoggatt",
     description="Streamlit AutoComplete ComboBox",
     long_description=long_description,
@@ -20,7 +20,7 @@ setuptools.setup(
     },
     python_requires=">=3.7",
     install_requires=[
-        "streamlit >= 1.0",
+        "streamlit >= 1.27.0",
     ],
     extras_require={
         "tests": ["wikipedia"],
