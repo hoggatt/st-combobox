@@ -88,7 +88,7 @@ def _process_search(
         and searchterm == blank_search_value
         and prev_size == 0
     ):
-        st.experimental_rerun()
+        st.rerun()
 
     # if not reruning, can also call for stopping on update
     if stop_on_update:
